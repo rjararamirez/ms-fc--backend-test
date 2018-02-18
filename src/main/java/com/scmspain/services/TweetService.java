@@ -3,12 +3,9 @@ package com.scmspain.services;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
-import org.springframework.boot.actuate.metrics.writer.Delta;
-import org.springframework.boot.actuate.metrics.writer.MetricWriter;
 import org.springframework.stereotype.Service;
 
 import com.scmspain.entities.Tweet;
@@ -18,24 +15,7 @@ import com.scmspain.entities.Tweet;
  */
 @Service
 @Transactional
-public class TweetService {
-
-	/** The entity manager. */
-	private final EntityManager entityManager;
-
-	/** The metric writer. */
-	private final MetricWriter metricWriter;
-
-	/**
-	 * Instantiates a new tweet service.
-	 *
-	 * @param entityManager the entity manager
-	 * @param metricWriter the metric writer
-	 */
-	public TweetService(final EntityManager entityManager, final MetricWriter metricWriter) {
-		this.entityManager = entityManager;
-		this.metricWriter = metricWriter;
-	}
+public class TweetService extends CommonService {
 
 	/**
 	 * Push tweet to repository.
@@ -49,8 +29,8 @@ public class TweetService {
 			tweet.setTweet(text);
 			tweet.setPublisher(publisher);
 
-			metricWriter.increment(new Delta<Number>("published-tweets", 1));
-			entityManager.persist(tweet);
+			metricIncrement("published-tweets");
+			getEntityManager().persist(tweet);
 		} else {
 			throw new IllegalArgumentException("Tweet must not be greater than 140 characters");
 		}
@@ -63,7 +43,7 @@ public class TweetService {
 	 * @return the tweet
 	 */
 	public Tweet getTweet(final Long id) {
-		return entityManager.find(Tweet.class, id);
+		return getEntityManager().find(Tweet.class, id);
 	}
 
 	/**
@@ -73,8 +53,8 @@ public class TweetService {
 	 */
 	public List<Tweet> listAllTweets() {
 		final List<Tweet> result = new ArrayList<>();
-		metricWriter.increment(new Delta<Number>("times-queried-tweets", 1));
-		final TypedQuery<Long> query = entityManager
+		metricIncrement("times-queried-tweets");
+		final TypedQuery<Long> query = getEntityManager()
 		        .createQuery("SELECT id FROM Tweet AS tweetId WHERE pre2015MigrationStatus<>99 ORDER BY id DESC", Long.class);
 		final List<Long> ids = query.getResultList();
 		for (final Long id : ids) {

@@ -5,6 +5,8 @@ import static org.springframework.http.HttpStatus.CREATED;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,24 +25,19 @@ import com.scmspain.services.TweetService;
 @RestController
 public class TweetController {
 
-	/** The tweet service. */
-	private final TweetService tweetService;
+	/** The Constant TWEET_PATH. */
+	private static final String TWEET_PATH = "/tweet";
 
-	/**
-	 * Instantiates a new tweet controller.
-	 *
-	 * @param tweetService the tweet service
-	 */
-	public TweetController(final TweetService tweetService) {
-		this.tweetService = tweetService;
-	}
+	/** The tweet service. */
+	@Resource(name = "tweetService")
+	private transient TweetService tweetService;
 
 	/**
 	 * List all tweets.
 	 *
 	 * @return the list
 	 */
-	@GetMapping("/tweet")
+	@GetMapping(TWEET_PATH)
 	public List<Tweet> listAllTweets() {
 		return tweetService.listAllTweets();
 	}
@@ -50,7 +47,7 @@ public class TweetController {
 	 *
 	 * @param publishTweetCommand the publish tweet command
 	 */
-	@PostMapping("/tweet")
+	@PostMapping(TWEET_PATH)
 	@ResponseStatus(CREATED)
 	public void publishTweet(@RequestBody final PublishTweetCommand publishTweetCommand) {
 		tweetService.publishTweet(publishTweetCommand.getPublisher(), publishTweetCommand.getTweet());
