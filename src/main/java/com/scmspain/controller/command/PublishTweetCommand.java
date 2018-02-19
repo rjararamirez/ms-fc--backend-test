@@ -3,7 +3,10 @@ package com.scmspain.controller.command;
 /**
  * The Class PublishTweetCommand.
  */
-public class PublishTweetCommand {
+public class PublishTweetCommand extends AbstractCommand {
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 3995355578813237218L;
 
 	/** The publisher. */
 	private String publisher;

@@ -2,6 +2,9 @@ package com.scmspain.controller;
 
 import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -54,7 +57,7 @@ public class TweetControllerTest {
 	 */
 	@Test
 	public void shouldReturn200WhenInsertingAValidTweet() throws Exception {
-		mockMvc.perform(newTweet("Prospect", "Breaking the law")).andExpect(status().is(201));
+		mockMvc.perform(newTweet("Prospect", "Breaking the law")).andExpect(status().is(CREATED.value()));
 	}
 
 	/**
@@ -66,7 +69,7 @@ public class TweetControllerTest {
 	public void shouldReturn200WhenInsertingTweetWithLink() throws Exception {
 		mockMvc.perform(newTweet("Schibsted Spain",
 		        "We are Schibsted Spain (look at our home page http://www.schibsted.es/), we own Vibbo, InfoJobs, fotocasa, coches.net and milanuncios. Welcome!"))
-		        .andExpect(status().is(201));
+		        .andExpect(status().is(CREATED.value()));
 	}
 
 	/**
@@ -78,7 +81,7 @@ public class TweetControllerTest {
 	public void shouldReturn400WhenInsertingAnInvalidTweet() throws Exception {
 		mockMvc.perform(newTweet("Schibsted Spain",
 		        "We are Schibsted Spain (look at our home page isNotLinkhttp://www.schibsted.es/), we own Vibbo, InfoJobs, fotocasa, coches.net and milanuncios. Welcome!"))
-		        .andExpect(status().is(400));
+		        .andExpect(status().is(BAD_REQUEST.value()));
 	}
 
 	/**
@@ -88,10 +91,51 @@ public class TweetControllerTest {
 	 */
 	@Test
 	public void shouldReturnAllPublishedTweets() throws Exception {
-		mockMvc.perform(newTweet("Yo", "How are you?")).andExpect(status().is(201));
+		mockMvc.perform(newTweet("Yo", "How are you?")).andExpect(status().is(CREATED.value()));
 
-		final MvcResult getResult = mockMvc.perform(get("/tweet")).andExpect(status().is(200)).andReturn();
+		final MvcResult getResult = mockMvc.perform(get("/tweet")).andExpect(status().is(OK.value())).andReturn();
 
+		final String content = getResult.getResponse().getContentAsString();
+		assertThat(new ObjectMapper().readValue(content, List.class).size()).isEqualTo(1);
+	}
+
+	/**
+	 * Should return all discard tweets.
+	 *
+	 * @throws Exception the exception
+	 */
+	@Test
+	public void shouldReturnAllDiscardTweets() throws Exception {
+		mockMvc.perform(newTweet("Yo", "How are you?")).andExpect(status().is(CREATED.value()));
+		mockMvc.perform(newTweet("Tu", "How are you?")).andExpect(status().is(CREATED.value()));
+		mockMvc.perform(discardTweet(1L)).andExpect(status().is(OK.value()));
+
+		final MvcResult getResult = mockMvc.perform(get("/discarded")).andExpect(status().is(OK.value())).andReturn();
+		final String content = getResult.getResponse().getContentAsString();
+		assertThat(new ObjectMapper().readValue(content, List.class).size()).isEqualTo(1);
+	}
+
+	/**
+	 * Should return 400 when invalid tweet.
+	 *
+	 * @throws Exception the exception
+	 */
+	@Test
+	public void shouldReturn400WhenInvalidTweet() throws Exception {
+		mockMvc.perform(discardTweet(null)).andExpect(status().is(BAD_REQUEST.value()));
+	}
+
+	/**
+	 * Should get tweets by user.
+	 *
+	 * @throws Exception the exception
+	 */
+	@Test
+	public void shouldGetTweetsByUser() throws Exception {
+		mockMvc.perform(newTweet("testByUser", "How are you?")).andExpect(status().is(CREATED.value()));
+		mockMvc.perform(newTweet("testByUser2", "How are you?")).andExpect(status().is(CREATED.value()));
+
+		final MvcResult getResult = mockMvc.perform(get("/tweet/testByUser")).andExpect(status().is(OK.value())).andReturn();
 		final String content = getResult.getResponse().getContentAsString();
 		assertThat(new ObjectMapper().readValue(content, List.class).size()).isEqualTo(1);
 	}
@@ -106,6 +150,16 @@ public class TweetControllerTest {
 	private MockHttpServletRequestBuilder newTweet(final String publisher, final String tweet) {
 		return post("/tweet").contentType(MediaType.APPLICATION_JSON_UTF8)
 		        .content(format("{\"publisher\": \"%s\", \"tweet\": \"%s\"}", publisher, tweet));
+	}
+
+	/**
+	 * Discard tweet.
+	 *
+	 * @param tweetId the tweet id
+	 * @return the mock http servlet request builder
+	 */
+	private MockHttpServletRequestBuilder discardTweet(final Long tweetId) {
+		return post("/discarded").contentType(MediaType.APPLICATION_JSON_UTF8).content(format("{\"tweet\": \"%s\"}", tweetId));
 	}
 
 }
