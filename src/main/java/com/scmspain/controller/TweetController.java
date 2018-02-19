@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -47,6 +48,18 @@ public class TweetController {
 	@Transactional(readOnly = true)
 	public List<TweetDto> listAllTweets() {
 		return tweetService.listAllTweets();
+	}
+
+	/**
+	 * Gets the tweets by user.
+	 *
+	 * @param publisher the publisher
+	 * @return the tweets by user
+	 */
+	@GetMapping(TWEET_PATH + "/{publisher}")
+	@Transactional(readOnly = true)
+	public List<TweetDto> getTweetsByUser(@PathVariable final String publisher) {
+		return tweetService.getTweetsByUser(publisher);
 	}
 
 	/**
