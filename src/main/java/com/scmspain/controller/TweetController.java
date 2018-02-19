@@ -1,8 +1,8 @@
 package com.scmspain.controller;
 
-import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 
 import java.util.List;
 
@@ -90,7 +90,7 @@ public class TweetController {
 	 * @param publishTweetCommand the publish tweet command
 	 */
 	@PostMapping(DISCARD_PATH)
-	@ResponseStatus(ACCEPTED)
+	@ResponseStatus(OK)
 	public void discardTweet(@RequestBody final DiscardTweetCommand discardTweetCommand) {
 		tweetService.discardTweet(discardTweetCommand.getTweet());
 	}

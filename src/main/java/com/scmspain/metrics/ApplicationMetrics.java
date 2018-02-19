@@ -21,14 +21,4 @@ public class ApplicationMetrics {
 		metricWriter.increment(new Delta<Number>(metricName, 1));
 	}
 
-	/**
-	 * Metric increment.
-	 *
-	 * @param metricName the metric name
-	 * @param customIncrement the custom increment
-	 */
-	public void metricIncrement(final String metricName, final Number customIncrement) {
-		metricWriter.increment(new Delta<>(metricName, customIncrement));
-	}
-
 }

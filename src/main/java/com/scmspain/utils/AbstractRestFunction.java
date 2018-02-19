@@ -2,7 +2,6 @@ package com.scmspain.utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 /**
  * The Class AbstractRestFunction.
@@ -35,23 +34,6 @@ public class AbstractRestFunction<T, S> {
 		for (final T data : list) {
 			resultList.add(wrapData(data));
 		}
-
-		return resultList;
-
-	}
-
-	/**
-	 * Wrap data list.
-	 *
-	 * @param list the list
-	 * @return the list
-	 */
-	public List<S> wrapDataList(final Stream<T> list) {
-		final List<S> resultList = new ArrayList<>();
-
-		list.forEach(data -> {
-			resultList.add(wrapData(data));
-		});
 
 		return resultList;
 
