@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.scmspain.controller.command.PublishTweetCommand;
 import com.scmspain.entities.Tweet;
-import com.scmspain.services.TweetService;
+import com.scmspain.services.interfaces.TweetService;
 
 /**
  * The Class TweetController.

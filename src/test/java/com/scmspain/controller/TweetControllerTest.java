@@ -58,6 +58,18 @@ public class TweetControllerTest {
 	}
 
 	/**
+	 * Should return 200 when inserting tweet with link.
+	 *
+	 * @throws Exception the exception
+	 */
+	@Test
+	public void shouldReturn200WhenInsertingTweetWithLink() throws Exception {
+		mockMvc.perform(newTweet("Schibsted Spain",
+		        "We are Schibsted Spain (look at our home page http://www.schibsted.es/), we own Vibbo, InfoJobs, fotocasa, coches.net and milanuncios. Welcome!"))
+		        .andExpect(status().is(201));
+	}
+
+	/**
 	 * Should return 400 when inserting an invalid tweet.
 	 *
 	 * @throws Exception the exception
@@ -65,7 +77,7 @@ public class TweetControllerTest {
 	@Test
 	public void shouldReturn400WhenInsertingAnInvalidTweet() throws Exception {
 		mockMvc.perform(newTweet("Schibsted Spain",
-		        "We are Schibsted Spain (look at our home page http://www.schibsted.es/), we own Vibbo, InfoJobs, fotocasa, coches.net and milanuncios. Welcome!"))
+		        "We are Schibsted Spain (look at our home page isNotLinkhttp://www.schibsted.es/), we own Vibbo, InfoJobs, fotocasa, coches.net and milanuncios. Welcome!"))
 		        .andExpect(status().is(400));
 	}
 

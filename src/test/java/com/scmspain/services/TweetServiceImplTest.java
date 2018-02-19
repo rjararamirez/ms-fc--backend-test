@@ -15,12 +15,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.scmspain.entities.Tweet;
+import com.scmspain.services.impl.TweetServiceImpl;
 
 /**
  * The Class TweetServiceTest.
  */
 @RunWith(SpringRunner.class)
-public class TweetServiceTest {
+public class TweetServiceImplTest {
 
 	/** The entity manager. */
 	@MockBean
@@ -32,7 +33,7 @@ public class TweetServiceTest {
 
 	/** The tweet service. */
 	@InjectMocks
-	private TweetService tweetService;
+	private TweetServiceImpl tweetService;
 
 	/**
 	 * Sets the up.
