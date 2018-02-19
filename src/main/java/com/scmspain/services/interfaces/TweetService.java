@@ -6,6 +6,7 @@ package com.scmspain.services.interfaces;
 import java.util.List;
 
 import com.scmspain.entities.Tweet;
+import com.scmspain.response.dto.TweetDto;
 
 /**
  * The Interface TweetService.
@@ -21,6 +22,13 @@ public interface TweetService {
 	void publishTweet(final String publisher, final String text);
 
 	/**
+	 * Discard tweet.
+	 *
+	 * @param tweetId the tweet id
+	 */
+	void discardTweet(final Long tweetId);
+
+	/**
 	 * Gets the tweet.
 	 *
 	 * @param id the id
@@ -33,6 +41,13 @@ public interface TweetService {
 	 *
 	 * @return the list
 	 */
-	List<Tweet> listAllTweets();
+	List<TweetDto> listAllTweets();
+
+	/**
+	 * List all discarded tweets.
+	 *
+	 * @return the list
+	 */
+	List<TweetDto> listAllDiscardedTweets();
 
 }
