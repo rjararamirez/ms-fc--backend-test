@@ -1,5 +1,8 @@
 package com.scmspain.entities;
 
+import java.io.Serializable;
+import java.util.Calendar;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,7 +12,10 @@ import javax.persistence.Id;
  * The Class Tweet.
  */
 @Entity
-public class Tweet {
+public class Tweet implements Serializable {
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 3665728846322043267L;
 
 	/** The id. */
 	@Id
@@ -21,13 +27,23 @@ public class Tweet {
 	private String publisher;
 
 	/** The tweet. */
-	@Column(nullable = false, length = 140)
+	@Column(nullable = false, length = 1000)
 	private String tweet;
 
 	/** The pre 2015 migration status. */
 	@Column(nullable = true)
 	private Long pre2015MigrationStatus = 0L;
 
+	@Column(nullable = false)
+	private Calendar publishDate;
+
+	/** The discarted. */
+	@Column
+	private boolean discarted;
+
+	/**
+	 * Instantiates a new tweet.
+	 */
 	public Tweet() {
 	}
 
@@ -101,6 +117,42 @@ public class Tweet {
 	 */
 	public void setPre2015MigrationStatus(final Long pre2015MigrationStatus) {
 		this.pre2015MigrationStatus = pre2015MigrationStatus;
+	}
+
+	/**
+	 * Gets the publish date.
+	 *
+	 * @return the publish date
+	 */
+	public Calendar getPublishDate() {
+		return publishDate;
+	}
+
+	/**
+	 * Sets the publish date.
+	 *
+	 * @param publishDate the new publish date
+	 */
+	public void setPublishDate(final Calendar publishDate) {
+		this.publishDate = publishDate;
+	}
+
+	/**
+	 * Checks if is discarted.
+	 *
+	 * @return true, if is discarted
+	 */
+	public boolean isDiscarted() {
+		return discarted;
+	}
+
+	/**
+	 * Sets the discarted.
+	 *
+	 * @param discarted the new discarted
+	 */
+	public void setDiscarted(final boolean discarted) {
+		this.discarted = discarted;
 	}
 
 }
